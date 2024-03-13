@@ -58,10 +58,12 @@ const cartSlice = createSlice({
 
 export const { loadCart, increment, decrement, remove } = cartSlice.actions;
 
-export const selectTotalSum = (state: RootState) =>
-  state.cart.total.toLocaleString("en-US", {
+export const localeSum = (value: number) =>
+  value.toLocaleString("ru-RU", {
     style: "currency",
-    currency: "USD",
-  });
+    currency: "RUB"
+  })
+
+export const selectTotalSum = (state: RootState) => localeSum(state.cart.total)
 
 export default cartSlice.reducer;

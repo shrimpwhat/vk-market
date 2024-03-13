@@ -1,0 +1,26 @@
+.content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin-left: 10px;
+}
+
+.card-image {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  border-right: 1px solid lightgrey;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .info {
+    display: flex;
+    place-items: center;
+  }
+}
