@@ -64,7 +64,7 @@ export function App() {
 
         <SplitCol autoSpaced>
           <FixedLayout>
-            <Group>
+            <Group style={{ width: "100%" }}>
               <Title>Итого: {total}</Title>
             </Group>
           </FixedLayout>
