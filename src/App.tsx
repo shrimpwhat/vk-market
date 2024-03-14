@@ -2,7 +2,7 @@ import "@vkontakte/vkui/dist/vkui.css";
 import { useGetProductsQuery } from "./state/api";
 import { useAppDispatch, useAppSelector } from "./state/hooks";
 import { loadCart, selectTotalSum } from "./state/cartSlice";
-import { useEffect } from "react";
+import { useEffect, useState, ReactNode } from "react";
 import Card from "./Card/Card";
 import {
   Div,
@@ -11,27 +11,54 @@ import {
   SplitCol,
   SplitLayout,
   Title,
+  ScreenSpinner,
+  Snackbar,
 } from "@vkontakte/vkui";
+import { Icon28ErrorCircleOutline } from "@vkontakte/icons";
 
 export function App() {
   const dispatch = useAppDispatch();
-  const { data, isSuccess, isFetching } = useGetProductsQuery();
+  const { data, isSuccess } = useGetProductsQuery();
 
   const { products } = useAppSelector((state) => state.cart);
   const total = useAppSelector(selectTotalSum);
 
-  useEffect(() => {
-    if (isSuccess) dispatch(loadCart(data));
-  }, [isSuccess]);
+  const [poput, setPopout] = useState<ReactNode>(null);
+  const [snackbar, setSnackbar] = useState<ReactNode>(null);
 
-  if (isFetching) return <p>Загрузка</p>;
+  const showErrorSnackbar = (text: string) => {
+    setSnackbar(
+      <Snackbar
+        onClose={() => setSnackbar(null)}
+        before={
+          <Icon28ErrorCircleOutline fill="var(--vkui--color_icon_negative)" />
+        }
+        duration={4000}
+      >
+        {text}
+      </Snackbar>
+    );
+  };
+
+  useEffect(() => setPopout(<ScreenSpinner />), []);
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(loadCart(data));
+      setPopout(null);
+    }
+  }, [isSuccess]);
 
   return (
     <Div>
-      <SplitLayout>
+      <SplitLayout popout={poput}>
         <SplitCol minWidth={"75%"}>
           {products.map((product) => (
-            <Card key={product.id} product={product} />
+            <Card
+              key={product.id}
+              product={product}
+              onError={showErrorSnackbar}
+            />
           ))}
         </SplitCol>
 
@@ -43,6 +70,7 @@ export function App() {
           </FixedLayout>
         </SplitCol>
       </SplitLayout>
+      {snackbar}
     </Div>
   );
 }

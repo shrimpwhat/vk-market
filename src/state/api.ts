@@ -10,6 +10,7 @@ export const productsApi = createApi({
       transformResponse: (response: Omit<Product, "count">[]): Product[] =>
         response.map((product) => ({
           ...product,
+          price: Math.ceil(product.price * 90),
           count: 1,
         })),
     }),

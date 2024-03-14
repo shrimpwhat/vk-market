@@ -13,15 +13,24 @@ import { useAppDispatch } from "../state/hooks";
 import { increment, decrement, remove } from "../state/cartSlice";
 import "./style.css";
 
-export default function ProductCard({ product }: { product: Product }) {
+interface ProductCardProps {
+  product: Product;
+  onError: (text: string) => void;
+}
+
+export default function ProductCard({ product, onError }: ProductCardProps) {
   const dispatch = useAppDispatch();
 
   const handleIncrement = () => {
     if (product.count < 10) dispatch(increment(product.id));
+    else onError("Вы не можете добавить больше 10 единиц товара");
   };
+
   const handleDecrement = () => {
     if (product.count > 1) dispatch(decrement(product.id));
+    else onError("Количество товара не может быть меншье 1");
   };
+
   const handleRemove = () => {
     dispatch(remove(product.id));
   };
